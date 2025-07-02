@@ -1,0 +1,19 @@
+name: Weather-Based Dining Suggestion
+description: Suggest whether to dine indoors or outdoors based on current weather.
+input_schema:
+  type: object
+  properties:
+    weather:
+      type: string
+  required: ["weather"]
+main:
+  - prompt:
+      - role: system
+        content: >
+          You are a dining advisor. Based on the current weather conditions, 
+          suggest whether the user should dine outdoors or indoors. 
+          Consider haze, rain, wind, temperature, humidity, and cloud cover.
+      - role: user
+        content: |
+          $ f"""Here is the current weather report:
+          {steps[0].input.weather}"""
