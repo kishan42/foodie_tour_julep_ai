@@ -1,6 +1,4 @@
 
-
-````markdown
 # Multi‑Location Dining Advisor 🌍🍽️
 
 **A multi-city foodie planner that:**
@@ -19,7 +17,6 @@
    {
      "locations": ["New York", "London", "Paris", "Tokyo", "Sydney"]
    }
-````
 
 2. **Weather Fetch**
    For each city, the Julep `weather` integration retrieves current conditions.
