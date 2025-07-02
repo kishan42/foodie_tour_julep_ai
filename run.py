@@ -1,6 +1,7 @@
 import time
 import yaml
 from julep import Julep
+from dotenv import load_dotenv
 
 client = Julep(api_key=os.getenv("JULEP_API_KEY"))
 
