@@ -80,13 +80,4 @@ Output for each city includes:
 
 ---
 
-## 🤝 Contributing
-
-PRs are welcome! Whether it's adding new city support, improving prompts, or enhancing tests, feel free to contribute.
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See [LICENSE](LICENSE) for details.
 
