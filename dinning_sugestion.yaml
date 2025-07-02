@@ -1,19 +1,52 @@
-name: Weather-Based Dining Suggestion
-description: Suggest whether to dine indoors or outdoors based on current weather.
+name: Multi-Location Dining Advisor
+description: Fetch weather for each location and suggest indoor or outdoor dining.
+
 input_schema:
   type: object
   properties:
-    weather:
-      type: string
-  required: ["weather"]
+    locations:
+      type: array
+      items:
+        type: string
+  required: ["locations"]
+
+tools:
+  - name: weather
+    type: integration
+    integration:
+      provider: weather
+      setup:
+        openweathermap_api_key: "8852751c5f9a026874805605460683ec"
+
 main:
-  - prompt:
-      - role: system
-        content: >
-          You are a dining advisor. Based on the current weather conditions, 
-          suggest whether the user should dine outdoors or indoors. 
-          Consider haze, rain, wind, temperature, humidity, and cloud cover.
-      - role: user
-        content: |
-          $ f"""Here is the current weather report:
-          {steps[0].input.weather}"""
+  # Step 0: Fetch weather for each location
+  - over: $ steps[0].input.locations
+    map:
+      tool: weather
+      arguments:
+        location: $ _
+
+  # Step 1: Create a list of (location, weather_result) pairs
+  - evaluate:
+      entries: |
+        $ list(zip(
+          steps[0].input.locations,
+          [o['result'] for o in steps[0].output]
+        ))
+
+  # Step 2: For each entry, generate dining advice
+  - over: $ _.entries
+    parallelism: 5
+    map:
+      prompt:
+        - role: system
+          content: >
+            You are a culinary + weather advisor. For the city and its weather:
+            1. Suggest dining indoors or outdoors.
+            2. List 3 iconic local dishes.
+            3. Recommend one highly-rated restaurant per dish.
+            4. Create a delightful one‑day “foodie tour”, crafting breakfast, lunch, and dinner narratives that factor in weather conditions..
+        - role: user
+          content: |
+            $ f"""Location: {_ [0]}
+            Weather details: {_ [1]}"""
